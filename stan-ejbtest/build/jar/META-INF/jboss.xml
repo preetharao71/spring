@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 4.2//EN" "http://www.jboss.org/j2ee/dtd/jboss_4_2.dtd">
+
+<jboss>
+
+   <enterprise-beans>
+   <session>
+         <ejb-name>account</ejb-name>
+         <jndi-name>account</jndi-name>
+   </session>
+  
+   <session>
+         <ejb-name>balance</ejb-name>
+         <jndi-name>balance</jndi-name>
+   </session>
+   
+   </enterprise-beans>
+   <resource-managers>
+   </resource-managers>
+
+</jboss>

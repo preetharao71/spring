@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<application>
+	<display-name>Example 3 </display-name>
+	  <module>
+            <web>
+                <web-uri>firstejb.war</web-uri>
+                <context-root>firstejb</context-root>
+            </web>
+        </module>
+	<module>
+		<ejb>firstejb.jar</ejb>
+	</module>
+
+</application>
+

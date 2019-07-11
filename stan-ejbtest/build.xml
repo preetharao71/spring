@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+<project name="testant" default="all" basedir=".">
+
+
+	<target name="init">
+		<delete file="${dirs.base}/firstejb.ear"/>
+		<delete file="c:/jboss-4.2.2.GA/server/default/deploy/firstejb.ear"/>
+		<delete dir="${dirs.base}/build"/>
+		<property name="dirs.base" value="${basedir}"/>
+		<mkdir dir="${dirs.base}/build"/>
+		<mkdir dir="${dirs.base}/build/src"/>
+		<mkdir dir="${dirs.base}/build/ear"/>
+		<mkdir dir="${dirs.base}/build/war"/>
+		<mkdir dir="${dirs.base}/build/jar"/>		
+		<mkdir dir="${dirs.base}/build/war/WEB-INF"/>		
+		<mkdir dir="${dirs.base}/build/war/WEB-INF/classes"/>
+		<mkdir dir="${dirs.base}/build/ear/META-INF"/>
+		<mkdir dir="${dirs.base}/build/jar/META-INF"/>			
+			
+		
+		<property name="web" value="${dirs.base}/web"/>
+		<property name="deploymentdescription" value="${dirs.base}/descriptors"/>
+
+		<property name="warFile" value="firstejb.war"/>
+		<property name="earFile" value="firstejb.ear"/>
+		<property name="jarFile" value="firstejb.jar"/>
+
+
+		<property name="earDir" value="${dirs.base}/build/ear"/>
+		<property name="warDir" value="${dirs.base}/build/war"/>
+		<property name="jarDir" value="${dirs.base}/build/jar"/>
+		<property name="classdir" value="${dirs.base}/classes"/>
+
+
+            
+
+	</target>
+
+	<!-- Main target  -->
+	
+	<property name="src" value="${dirs.base}/src"/>
+	<target name="all" depends="init,buildJar,buildWar,buildEar,deploy"/>
+	<!-- Compile Java Files and store in /build/src directory  -->
+	<!-- target name="build" >
+      	  <javac srcdir="${src}" destdir="${classdir}" 
+      	  	debug="true" includes="web/*.java" 
+      	  			classpath="${dirs.base}/lib/*.jar"/>
+      	   
+      	
+      </target -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- create the hibernates jaw.har file -->
+	<!-- target name="har">
+		<jar destfile="${earDir}/jaw.har">
+			<fileset dir="${deploymentdescription}/jar">
+				<include name="**/*.hbm.xml"/>
+			</fileset>
+			<metainf dir="${deploymentdescription}/jar">
+				<include name="hibernate-service.xml"/>
+			</metainf>
+		</jar>
+	</target -->
+	<!-- Create the web archive File -->
+	<target name="buildWar" depends="init">
+	    <copy todir="${warDir}/WEB-INF/classes">
+		      <fileset dir="${classdir}" includes="controller/*.class" /> 
+	    </copy>
+
+	    <copy todir="${warDir}/WEB-INF">
+		      <fileset dir="${deploymentdescription}/war/" includes="web.xml,jboss-web.xml" /> 
+	    </copy>
+
+	    <copy todir="${warDir}">
+		      <fileset dir="${web}" includes="*.*" /> 
+	    </copy>
+
+            <!-- Create war file and place in ear directory -->
+		<jar jarfile="${earDir}/${warFile}" basedir="${warDir}" />
+
+
+	</target>
+
+
+	<!-- Create the jar File -->
+
+	<target name="buildJar" depends="init">
+	    <copy todir="${jarDir}">
+		      <fileset dir="${classdir}" includes="p*/*.class,s*/*.class,m*/*.class" /> 
+	    </copy>
+
+	    <copy todir="${jarDir}/META-INF">
+		      <fileset dir="${deploymentdescription}/jar/" includes="ejb-jar.xml,jboss.xml,persistence.xml" /> 
+	    </copy>
+
+            
+		<jar jarfile="${earDir}/${jarFile}" basedir="${jarDir}" >
+			
+		</jar>
+
+
+	</target>
+
+
+	<!-- Create the ear File -->
+	<target name="buildEar" depends="init">
+	    <copy todir="${earDir}/META-INF">
+		      <fileset dir="${deploymentdescription}/ear" includes="application.xml" /> 
+	    	<fileset dir="${deploymentdescription}/ear" includes="jboss-app.xml" /> 
+	    </copy>
+		
+            <!-- Create ear file and place in ear directory -->
+		<jar jarfile="${basedir}/${earFile}" basedir="${earDir}" >
+			
+		</jar>
+	</target>
+
+	<target name="deploy">
+		<copy todir="C:/jboss-4.2.2.GA/server/default/deploy">
+		<fileset dir="${dirs.base}" includes="*.ear"/>
+		</copy>
+		
+	</target>
+</project>
+

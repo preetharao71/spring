@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    var XMLHttpRequestObject = false;
+    if(window.XMLHttpRequest)
+    {
+        XMLHttpRequestObject =new XMLHttpRequest();
+    }
+    else if (window.ActiveXObject)
+    {
+        XMLHttpRequestObject = 
+        new ActiveXObject("Microsoft.XMLHTTP");
+    }
+function getData(dataSource, divID)
+    {
+        if(XMLHttpRequestObject)
+        {
+        var obj=document.getElementById(divID);
+            XMLHttpRequestObject.open("GET",dataSource);
+            XMLHttpRequestObject.onreadystatechange=function()
+                    {
+                        if(XMLHttpRequestObject.readyState==4 && 
+                        XMLHttpRequestObject.status ==200)
+                        {
+                           var response=
+                           XMLHttpRequestObject.responseText;
+       obj.innerHTML=response;
+
+					}
+		                }                    
+            XMLHttpRequestObject.send(null);
+        }
+    }
+   </script>
+     <body>
+
+        <form>
+            <input type="button" value="Display message" 
+       onclick=
+      "getData('http://localhost:8080/firstejb/data.txt','targetDiv')">
+
+        <div id="targetDiv" style="color:red">
+
+            <p>The fetched data will go here</p>
+        </div>
+        </form>
+        </body>
