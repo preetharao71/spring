@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="single.UserPojo" table="USERS">
+   
+        <id name="userid"  />
+        <property name="uname" column="username"/>
+        <property name="upass" column="password"/>
+        <property name="flag"/>
+        <set name="addresses" table ="ADDRESS" cascade="all" lazy="true" 
+      	inverse="true">
+        	 <key column="USER_UID"/>
+       		 <one-to-many class="single.Address"/>
+      	</set> 
+      	<set name="trainings" table ="USER_HAS_TRAINING" cascade="all" >
+        <key column="userid"/>
+        <many-to-many column="tid" class="single.TrainingPojo"/>
+    </set>
+     </class>
+	<class name="single.Address" table="ADDRESS">
+   
+        <id name="aid"  />
+        <property name="street" />
+        <property name="city" />
+        
+        <many-to-one name="user" column="USER_UID" 
+					class="single.UserPojo"/>    
+		 
+     </class>
+	<class name="single.TrainingPojo" table="TRAININGS">
+		<id name="tid"/>
+		<property name="tname"/>
+		<set name="users" table ="USER_HAS_TRAINING" cascade="all" >
+        <key column="tid"/>
+        <many-to-many column="userid" class="single.UserPojo"/>
+    </set>
+	</class>
+</hibernate-mapping>

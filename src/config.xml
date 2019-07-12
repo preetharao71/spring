@@ -1,0 +1,70 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+	>
+
+	<bean class="shoepack.MyBeanPostProcessor"/>
+ 	<bean id="fac" class="shoepack.BataShoeFactory"/>
+ 	
+ 	<bean id="targetshop" class="shoepack.LuckyShoeShop" scope="singleton"
+		 		init-method="setup"
+		 		destroy-method="close">
+		 <property name="factory">
+	 			<ref bean="fac"/>
+ 		</property>
+ 	</bean>
+	<bean id="wadvice" class="shoepack.WelcomeAdvice"/>
+	<bean id="eadvice" class="shoepack.ExceptionAdviceHandler"/>
+	<bean id="aadvice" class="shoepack.AroundAdvice"/>
+	
+	<bean id="pointcutadvisor1"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+			<property name="mappedName"><value>sell*</value></property>		
+			<property name="advice"><ref bean="wadvice"/></property>
+	</bean>
+	<bean id="pointcutadvisor2"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+			<property name="mappedName"><value>sell*</value></property>		
+			<property name="advice"><ref bean="eadvice"/></property>
+	</bean>
+	<bean id="pointcutadvisor3"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+			<property name="mappedName"><value>sell*</value></property>		
+			<property name="advice"><ref bean="aadvice"/></property>
+	</bean>
+	<bean id="purchase" class="shoepack.PurchaseImpl"/>
+
+	<bean id="purchaseadvice" 
+			class="org.springframework.aop.support.DefaultIntroductionAdvisor" scope="prototype">
+        		<constructor-arg>
+            		<ref bean="purchase"/>
+        		</constructor-arg>
+    </bean>
+	<bean id="advisedshop"
+		class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<list>
+				<value>shoepack.Seller</value>
+				<value>shoepack.Purchase</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>pointcutadvisor1</value>
+				<value>pointcutadvisor2</value>
+				<value>pointcutadvisor3</value>
+				<value>purchaseadvice</value>
+			</list>
+		</property>
+		<property name="target">
+			<ref bean="targetshop"/>
+		</property>
+	</bean>
+</beans>
